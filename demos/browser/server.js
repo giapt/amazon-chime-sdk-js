@@ -35,6 +35,15 @@ const log = message => {
 const app = process.env.npm_config_app || 'meetingV2';
 
 const server = require(protocol).createServer(options, async (request, response) => {
+response.setHeader('Access-Control-Allow-Origin', '*');
+  response.setHeader('Access-Control-Request-Method', '*');
+  response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
+  response.setHeader('Access-Control-Allow-Headers', '*');
+  if ( request.method === 'OPTIONS' ) {
+    response.writeHead(200);
+    response.end();
+    return;
+  }
   log(`${request.method} ${request.url} BEGIN`);
   compression({})(request, response, () => {});
   try {
@@ -53,6 +62,7 @@ const server = require(protocol).createServer(options, async (request, response)
         meetingCache[title] = await chime
           .createMeeting({
             ClientRequestToken: uuid(),
+		MediaRegion: 'ap-southeast-1'
             // NotificationsConfiguration: {
             //   SqsQueueArn: 'Paste your arn here',
             //   SnsTopicArn: 'Paste your arn here'
@@ -101,6 +111,7 @@ const server = require(protocol).createServer(options, async (request, response)
         meetingCache[title] = await chime
           .createMeeting({
             ClientRequestToken: uuid(),
+		MediaRegion: 'ap-southeast-1'
             // NotificationsConfiguration: {
             //   SqsQueueArn: 'Paste your arn here',
             //   SnsTopicArn: 'Paste your arn here'
