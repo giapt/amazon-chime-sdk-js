@@ -27,6 +27,16 @@ chime.endpoint = new AWS.Endpoint(process.env.ENDPOINT || 'https://service.chime
 
 // Start an HTTP server to serve the index page and handle meeting actions
 http.createServer({}, async (request, response) => {
+response.setHeader('Access-Control-Allow-Origin', '*');
+  response.setHeader('Access-Control-Request-Method', '*');
+  response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
+  response.setHeader('Access-Control-Allow-Headers', '*');
+  if ( request.method === 'OPTIONS' ) {
+    response.writeHead(200);
+    response.end();
+    return;
+  }
+
   log(`${request.method} ${request.url} BEGIN`);
   try {
     // Enable HTTP compression
